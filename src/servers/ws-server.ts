@@ -1,20 +1,42 @@
 import { WebSocketServer } from 'ws';
+import regRequest from '../modules/requests/reg-request';
+import { RegistrationType, RequestType } from '../types/type';
+import { Commands, Messages } from '../types/enum';
+import parseData from '../utils/parse-data';
+
 function createWSServer(PORT: number) {
-  const wsServer = new WebSocketServer({ port: PORT });
+  let socketID = 0;
+  const wsClient = new WebSocketServer({ port: PORT });
   console.log(`WebSocket server started at ws://localhost:${PORT}`);
-  wsServer.on('connection', (wsClient) => {
-    console.log('new client');
-    wsClient.send('Hello, Client!');
-    wsClient.on('message', (message) => {
-      console.log(`get: ${message}`);
-      wsClient.send(`you say: ${message}`);
+
+  wsClient.on('connection', (ws) => {
+    const currentSocketID = socketID++;
+
+    ws.on('message', (message) => {
+      const reqObj: RegistrationType = parseData(message.toString());
+
+      const requestTypes: RequestType[] = [
+        {
+          type: Commands.REG_USER,
+          handler: () => {
+            regRequest(ws, reqObj, currentSocketID);
+          },
+        },
+      ];
+
+      requestTypes.forEach((request) => {
+        if (request.type === reqObj.type) {
+          request.handler();
+        }
+      });
     });
-    wsClient.on('close', () => {
-      console.log('disconect');
+
+    ws.on('close', () => {
+      console.log(Messages.CLIENT_DISCONNECT);
     });
   });
 
-  return wsServer;
+  return wsClient;
 }
 
 export default createWSServer;

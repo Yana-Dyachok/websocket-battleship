@@ -1,26 +1,3 @@
-// {
-//   "exclude": ["./dist", "./front"],
-//   "ts-node": {
-//     "transpileOnly": true,
-//     "files": true
-//   },
-//   "compilerOptions": {
-//     "target": "ES6",
-//     "module": "commonjs",
-//     "sourceMap": true,
-//     "rootDir": "./src",
-//     "outDir": "./dist",
-//     "baseUrl": "./src",
-//     "strict": true,
-//     "esModuleInterop": true,
-//     "resolveJsonModule": true,
-//     "allowJs": true,
-//     "noImplicitAny": true,
-//     "skipLibCheck": true,
-//     "moduleResolution": "node"
-//   }
-// }
-
 {
   "compilerOptions": {
     "module": "commonjs",

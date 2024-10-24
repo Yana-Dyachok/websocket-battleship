@@ -4,6 +4,9 @@ import { RegistrationType, RequestType } from '../types/type';
 import { Commands, Messages } from '../types/enum';
 import parseData from '../utils/parse-data';
 import createRoomRequest from '../modules/requests/create-room-request';
+import addPlayersRequest from '../modules/requests/add-players-request';
+import updateRoomRequest from '../modules/requests/update-room-request';
+import updateWinnersRequest from '../modules/requests/update-winners-request';
 
 function createWSServer(PORT: number) {
   let socketID = 0;
@@ -21,12 +24,22 @@ function createWSServer(PORT: number) {
           type: Commands.REG_USER,
           handler: () => {
             regRequest(ws, reqObj, currentSocketID);
+            updateWinnersRequest(wsClient);
+            updateRoomRequest(wsClient);
           },
         },
         {
           type: Commands.CREATE_ROOM,
           handler: () => {
             createRoomRequest(reqObj, currentSocketID);
+            updateRoomRequest(wsClient);
+          },
+        },
+        {
+          type: Commands.ADD_USER_TO_ROOM,
+          handler: () => {
+            addPlayersRequest(reqObj, currentSocketID);
+            updateWinnersRequest(wsClient);
           },
         },
       ];

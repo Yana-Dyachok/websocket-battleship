@@ -1,17 +1,18 @@
 import { RegistrationType } from '../../types/type';
 import rooms from '../../db.ts/rooms';
 import players from '../../db.ts/players';
+import { Commands } from '../../types/enum';
 
-const createRoomRequest = (req: RegistrationType, socketID: number): void => {
-  if (req.type !== 'create_room') return;
-  const roomExists = rooms.some((room) => room.idRoom === socketID);
+const createRoomRequest = (req: RegistrationType, socketID: number) => {
+  if (req.type !== Commands.CREATE_ROOM) return;
+  const roomExists = rooms.some((room) => room.roomId === socketID);
   if (!roomExists) {
     const player = players.find((player) => player.index === socketID);
 
     if (player) {
       const newRoom = {
-        idRoom: socketID,
-        playersRoom: [
+        roomId: socketID,
+        roomUsers: [
           {
             name: player.name,
             index: player.index,
@@ -19,7 +20,6 @@ const createRoomRequest = (req: RegistrationType, socketID: number): void => {
         ],
       };
       rooms.push(newRoom);
-      console.log(rooms);
     }
   }
 };

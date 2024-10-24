@@ -2,6 +2,7 @@ import players from '../db.ts/players';
 import validatePlayerData from '../utils/validate-player-data';
 import { Messages, Commands } from '../types/enum';
 import IRegistrationPlayer from '../types/interfaces/registration-player';
+
 const playerAuth = (requestsData: IRegistrationPlayer, socketID: number) => {
   let playerIndex = -1;
   let isError = false;

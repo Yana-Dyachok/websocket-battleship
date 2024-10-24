@@ -1,8 +1,8 @@
 import IPlayer from '../types/interfaces/interfaces';
 
 interface IRoom {
-  idRoom: number;
-  playersRoom: IPlayer[];
+  roomId: number;
+  roomUsers: IPlayer[];
 }
 
 const rooms: IRoom[] = [];

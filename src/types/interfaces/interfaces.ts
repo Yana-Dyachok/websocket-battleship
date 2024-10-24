@@ -91,7 +91,7 @@ export interface IAttack {
 export interface ICreateRoom {
   type: Commands.CREATE_ROOM;
   data: '';
-  id: 0;
+  id: number;
 }
 
 export interface IRandomAttack {

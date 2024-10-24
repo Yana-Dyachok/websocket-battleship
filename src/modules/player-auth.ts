@@ -1,8 +1,8 @@
 import players from '../db.ts/players';
 import validatePlayerData from '../utils/validate-player-data';
 import { Messages, Commands } from '../types/enum';
-import IAuthReqPlayer from '../types/interfaces/auth-req-player';
-const playerAuth = (requestsData: IAuthReqPlayer, socketID: number) => {
+import IRegistrationPlayer from '../types/interfaces/registration-player';
+const playerAuth = (requestsData: IRegistrationPlayer, socketID: number) => {
   let playerIndex = -1;
   let isError = false;
   let errorText = '';
@@ -11,7 +11,7 @@ const playerAuth = (requestsData: IAuthReqPlayer, socketID: number) => {
 
   if (!player) {
     playerIndex = socketID;
-    const validation = validatePlayerData(requestsData.data.name);
+    const validation = validatePlayerData(requestsData.data.name, requestsData.data.password);
 
     if (!validation.isValid) {
       isError = true;

@@ -5,10 +5,10 @@ import {
   IRandomAttack,
   IAttack,
 } from './interfaces/interfaces';
-import IAuthReqPlayer from './interfaces/auth-req-player';
+import IRegistrationPlayer from './interfaces/registration-player';
 import ISinglePlay from './interfaces/single-play';
 export type RegistrationType =
-  | IAuthReqPlayer
+  | IRegistrationPlayer
   | ICreateRoom
   | IAddPlayersToRoom
   | IAddShips

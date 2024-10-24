@@ -8,7 +8,7 @@ export enum Commands {
   UPDATE_WINNERS = 'update_winners',
   ADD_USER_TO_ROOM = 'add_user_to_room',
   ATTACK = 'attack',
-  RANDOM_ATTACK = 'randomAttack',
+  RANDOM_ATTACK = 'random_attack',
   TURN = 'turn',
   FINISH = 'finish',
   DISCONNECT = 'disconnect',
@@ -23,7 +23,7 @@ export enum Messages {
   CLIENT_DISCONNECT = 'Client disconnected',
   UNKNOWN_COMMAND = 'Unknown command',
   NAME_INVALID = 'Name must contain only letters',
-  NAME_TOO_SHORT = 'Name must be at least 3 characters',
+  TOO_SHORT = 'Must be at least 5 characters',
   WRONG_PASSWORD = 'Wrong password',
   AUTH_SUCCESS = '',
 }

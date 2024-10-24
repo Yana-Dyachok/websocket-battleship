@@ -3,6 +3,7 @@ import regRequest from '../modules/requests/reg-request';
 import { RegistrationType, RequestType } from '../types/type';
 import { Commands, Messages } from '../types/enum';
 import parseData from '../utils/parse-data';
+import createRoomRequest from '../modules/requests/create-room-request';
 
 function createWSServer(PORT: number) {
   let socketID = 0;
@@ -20,6 +21,12 @@ function createWSServer(PORT: number) {
           type: Commands.REG_USER,
           handler: () => {
             regRequest(ws, reqObj, currentSocketID);
+          },
+        },
+        {
+          type: Commands.CREATE_ROOM,
+          handler: () => {
+            createRoomRequest(reqObj, currentSocketID);
           },
         },
       ];

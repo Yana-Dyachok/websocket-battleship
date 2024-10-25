@@ -50,6 +50,18 @@ function createWSServer(PORT: number) {
             }
           },
         },
+        {
+          type: Commands.SINGLE_PLAY,
+          handler: () => {
+            const game = createGameRequest({
+              host: currentСonnectionID,
+              client: -1,
+              isOnline: false,
+            });
+            const response = getGameResponse(Commands.CREATE_GAME, game);
+            hostResponse(connections, game, response.host, response.client);
+          },
+        },
       ];
 
       requestTypes.forEach((request) => {

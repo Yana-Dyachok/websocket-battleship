@@ -1,4 +1,4 @@
-import { WebSocketServer } from 'ws';
+import { WebSocketServer, WebSocket } from 'ws';
 import regRequest from '../modules/requests/reg-request';
 import { RegistrationType, RequestType } from '../types/type';
 import { Commands, Messages } from '../types/enum';
@@ -7,23 +7,26 @@ import createRoomRequest from '../modules/requests/create-room-request';
 import addPlayersRequest from '../modules/requests/add-players-request';
 import updateRoomRequest from '../modules/requests/update-room-request';
 import updateWinnersRequest from '../modules/requests/update-winners-request';
+import createGameRequest from '../modules/requests/create-game-request';
+import getGameResponse from '../modules/responses/get-game-response';
+import hostResponse from '../modules/responses/host-response';
 
 function createWSServer(PORT: number) {
-  let socketID = 0;
+  const connections = new Map<number, WebSocket>();
+  let connectionID = 0;
   const wsClient = new WebSocketServer({ port: PORT });
   console.log(`WebSocket server started at ws://localhost:${PORT}`);
 
   wsClient.on('connection', (ws) => {
-    const currentSocketID = socketID++;
-
+    const currentСonnectionID = connectionID++;
+    connections.set(currentСonnectionID, ws);
     ws.on('message', (message) => {
-      const reqObj: RegistrationType = parseData(message.toString());
-
+      const req: RegistrationType = parseData(message.toString());
       const requestTypes: RequestType[] = [
         {
           type: Commands.REG_USER,
           handler: () => {
-            regRequest(ws, reqObj, currentSocketID);
+            regRequest(ws, req, currentСonnectionID);
             updateWinnersRequest(wsClient);
             updateRoomRequest(wsClient);
           },
@@ -31,21 +34,26 @@ function createWSServer(PORT: number) {
         {
           type: Commands.CREATE_ROOM,
           handler: () => {
-            createRoomRequest(reqObj, currentSocketID);
+            createRoomRequest(req, currentСonnectionID);
             updateRoomRequest(wsClient);
           },
         },
         {
           type: Commands.ADD_USER_TO_ROOM,
           handler: () => {
-            addPlayersRequest(reqObj, currentSocketID);
-            updateWinnersRequest(wsClient);
+            const gameData = addPlayersRequest(req, currentСonnectionID);
+            if (gameData) {
+              const game = createGameRequest(gameData);
+              updateWinnersRequest(wsClient);
+              const response = getGameResponse(Commands.CREATE_GAME, game);
+              hostResponse(connections, game, response.host, response.client);
+            }
           },
         },
       ];
 
       requestTypes.forEach((request) => {
-        if (request.type === reqObj.type) {
+        if (request.type === req.type) {
           request.handler();
         }
       });

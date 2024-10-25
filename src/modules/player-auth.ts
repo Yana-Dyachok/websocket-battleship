@@ -3,7 +3,7 @@ import validatePlayerData from '../utils/validate-player-data';
 import { Messages, Commands } from '../types/enum';
 import IRegistrationPlayer from '../types/interfaces/registration-player';
 
-const playerAuth = (requestsData: IRegistrationPlayer, socketID: number) => {
+const playerAuth = (requestsData: IRegistrationPlayer, conectionID: number) => {
   let playerIndex = -1;
   let isError = false;
   let errorText = '';
@@ -11,7 +11,7 @@ const playerAuth = (requestsData: IRegistrationPlayer, socketID: number) => {
   const player = players.filter((player) => player.name === requestsData.data.name)[0];
 
   if (!player) {
-    playerIndex = socketID;
+    playerIndex = conectionID;
     const validation = validatePlayerData(requestsData.data.name, requestsData.data.password);
 
     if (!validation.isValid) {
@@ -19,19 +19,19 @@ const playerAuth = (requestsData: IRegistrationPlayer, socketID: number) => {
       errorText = validation.errorMessage;
     } else {
       players.push({
-        index: socketID,
+        index: conectionID,
         name: requestsData.data.name,
         password: requestsData.data.password,
         wins: 0,
       });
-      playerIndex = socketID;
+      playerIndex = conectionID;
     }
   } else {
-    playerIndex = socketID;
+    playerIndex = conectionID;
     if (player.password === requestsData.data.password) {
       isError = false;
       errorText = '';
-      player.index = socketID;
+      player.index = conectionID;
     } else {
       isError = true;
       errorText = Messages.WRONG_PASSWORD;

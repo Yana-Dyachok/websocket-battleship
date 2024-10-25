@@ -102,3 +102,24 @@ export interface IRandomAttack {
   };
   id: 0;
 }
+
+export interface IGamePrimary {
+  host: number;
+  client: number;
+  isOnline: boolean;
+}
+
+export interface IGame {
+  idGame: number;
+  hostId: number;
+  clientId: number;
+  data:
+    | {
+        indexPlayer: number;
+        ships: IShip[];
+        grid: number[][];
+      }[]
+    | [];
+  turn?: number;
+  isOnline: boolean;
+}

@@ -10,6 +10,7 @@ export enum Commands {
   ATTACK = 'attack',
   RANDOM_ATTACK = 'random_attack',
   TURN = 'turn',
+  TURN_INIT = 'turn_init',
   FINISH = 'finish',
   DISCONNECT = 'disconnect',
   SINGLE_PLAY = 'single_play',

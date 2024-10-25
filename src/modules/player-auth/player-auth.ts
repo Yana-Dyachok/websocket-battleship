@@ -1,7 +1,7 @@
-import players from '../db.ts/players';
-import validatePlayerData from '../utils/validate-player-data';
-import { Messages, Commands } from '../types/enum';
-import IRegistrationPlayer from '../types/interfaces/registration-player';
+import players from '../../db.ts/players';
+import validatePlayerData from '../../utils/validate-player-data';
+import { Messages, Commands } from '../../types/enum';
+import IRegistrationPlayer from '../../types/interfaces/registration-player';
 
 const playerAuth = (requestsData: IRegistrationPlayer, conectionID: number) => {
   let playerIndex = -1;

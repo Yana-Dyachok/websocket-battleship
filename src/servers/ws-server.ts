@@ -15,7 +15,18 @@ function createWSServer(PORT: number) {
   const connections = new Map<number, WebSocket>();
   let connectionID = 0;
   const wsClient = new WebSocketServer({ port: PORT });
-  console.log(`WebSocket server started at ws://localhost:${PORT}`);
+
+  wsClient.on('listening', () => {
+    const addressInfo = wsClient.address();
+    if (typeof addressInfo === 'object' && addressInfo !== null) {
+      const { address, family, port } = addressInfo;
+      console.log(
+        `WebSocket server started at address: ${address}, port: ${port}, family: ${family}`
+      );
+    } else {
+      console.log(`WebSocket server started on port: ${PORT}`);
+    }
+  });
 
   wsClient.on('connection', (ws) => {
     const currentСonnectionID = connectionID++;
@@ -27,8 +38,8 @@ function createWSServer(PORT: number) {
           type: Commands.REG_USER,
           handler: () => {
             regRequest(ws, req, currentСonnectionID);
-            updateWinnersRequest(wsClient);
             updateRoomRequest(wsClient);
+            updateWinnersRequest(wsClient);
           },
         },
         {

@@ -1,5 +1,5 @@
 import { WebSocket } from 'ws';
-import playerAuth from '../player-auth';
+import playerAuth from '../player-auth/player-auth';
 import playerResponse from '../responses/player-response';
 import { Commands } from '../../types/enum';
 import { RegistrationType } from '../../types/type';

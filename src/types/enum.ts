@@ -8,7 +8,7 @@ export enum Commands {
   UPDATE_WINNERS = 'update_winners',
   ADD_USER_TO_ROOM = 'add_user_to_room',
   ATTACK = 'attack',
-  RANDOM_ATTACK = 'random_attack',
+  RANDOM_ATTACK = 'randomAttack',
   TURN = 'turn',
   TURN_INIT = 'turn_init',
   FINISH = 'finish',

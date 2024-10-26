@@ -10,6 +10,7 @@ import updateWinnersRequest from '../modules/requests/update-winners-request';
 import createGameRequest from '../modules/requests/create-game-request';
 import getGameResponse from '../modules/responses/get-game-response';
 import hostResponse from '../modules/responses/host-response';
+import addShipsRequest from '../modules/requests/add-ships-request';
 
 function createWSServer(PORT: number) {
   const connections = new Map<number, WebSocket>();
@@ -32,6 +33,7 @@ function createWSServer(PORT: number) {
     const currentСonnectionID = connectionID++;
     connections.set(currentСonnectionID, ws);
     ws.on('message', (message) => {
+      console.log('-> inbound message %s', message);
       const req: RegistrationType = parseData(message.toString());
       const requestTypes: RequestType[] = [
         {
@@ -57,7 +59,33 @@ function createWSServer(PORT: number) {
               const game = createGameRequest(gameData);
               updateWinnersRequest(wsClient);
               const response = getGameResponse(Commands.CREATE_GAME, game);
+              console.log(`outbound message ->`, JSON.stringify(response, null, 2));
               hostResponse(connections, game, response.host, response.client);
+            }
+          },
+        },
+        {
+          type: Commands.ADD_SHIPS,
+          handler: () => {
+            const game = addShipsRequest(req);
+            if (game) {
+              const responseStartGame = getGameResponse(Commands.START_GAME, game);
+              hostResponse(connections, game, responseStartGame.host, responseStartGame.client);
+              const responseTurn = getGameResponse(Commands.TURN_INIT, game);
+              hostResponse(connections, game, responseTurn.host, responseTurn.client);
+              if (!game.isOnline && game.turn === responseTurn.clientId) {
+                ws.emit(
+                  'message',
+                  JSON.stringify({
+                    type: Commands.RANDOM_ATTACK,
+                    data: JSON.stringify({
+                      gameId: game?.idGame,
+                      indexPlayer: game?.clientId,
+                    }),
+                    id: 0,
+                  })
+                );
+              }
             }
           },
         },
@@ -70,6 +98,7 @@ function createWSServer(PORT: number) {
               isOnline: false,
             });
             const response = getGameResponse(Commands.CREATE_GAME, game);
+            console.log(`outbound message ->`, JSON.stringify(response, null, 2));
             hostResponse(connections, game, response.host, response.client);
           },
         },
@@ -81,7 +110,9 @@ function createWSServer(PORT: number) {
         }
       });
     });
-
+    ws.on('error', (error: Error) => {
+      console.error(error);
+    });
     ws.on('close', () => {
       console.log(Messages.CLIENT_DISCONNECT);
     });

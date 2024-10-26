@@ -32,7 +32,7 @@ export interface IPlayerErrData {
 export interface IAuth {
   type: Commands;
   data: IPlayerAuth;
-  id: string;
+  id: number;
 }
 
 export interface IShip {
@@ -109,17 +109,23 @@ export interface IGamePrimary {
   isOnline: boolean;
 }
 
+export interface IGameData {
+  ships: IShip[];
+  indexPlayer: number;
+  grid: number[][];
+}
+
 export interface IGame {
   idGame: number;
   hostId: number;
   clientId: number;
-  data:
-    | {
-        indexPlayer: number;
-        ships: IShip[];
-        grid: number[][];
-      }[]
-    | [];
+  data: IGameData[] | [];
   turn?: number;
   isOnline: boolean;
+}
+
+export interface IMessage {
+  type: Commands;
+  data: string;
+  id: number;
 }

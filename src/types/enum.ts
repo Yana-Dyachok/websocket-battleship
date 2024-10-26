@@ -28,3 +28,10 @@ export enum Messages {
   WRONG_PASSWORD = 'Wrong password',
   AUTH_SUCCESS = '',
 }
+
+export const enum Attack {
+  MISSED = 'miss',
+  KILLED = 'killed',
+  SHOT = 'shot',
+  ERROR = 'error',
+}

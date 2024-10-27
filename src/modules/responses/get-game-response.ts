@@ -1,69 +1,62 @@
 import { IGame } from '../../types/interfaces/interfaces';
 import { Commands } from '../../types/enum';
+import { GameType } from '../../types/type';
 
-const getGameResponse = (
-  actionType: Commands.CREATE_GAME | Commands.START_GAME | Commands.TURN | Commands.TURN_INIT,
-  gameDetails: IGame
-) => {
-  let responseHost = '';
-  let responsePlayer = '';
-
-  const createResponse = (playerId: number) =>
-    JSON.stringify({
-      type: actionType,
-      data: JSON.stringify({ gameId: gameDetails.hostId, playerId }),
+const getGameResponse = (type: GameType, game: IGame) => {
+  let hostResponse = '';
+  let clientResponse = '';
+  if (type === Commands.CREATE_GAME) {
+    hostResponse = JSON.stringify({
+      type: Commands.CREATE_GAME,
+      data: JSON.stringify({ idGame: game.hostId, idPlayer: game.hostId }),
       id: 0,
     });
-
-  const startResponse = (playerId: number) =>
-    JSON.stringify({
+    clientResponse = JSON.stringify({
+      type: Commands.CREATE_GAME,
+      data: JSON.stringify({ idGame: game.hostId, idPlayer: game.clientId }),
+      id: 0,
+    });
+  }
+  if (type === Commands.START_GAME) {
+    hostResponse = JSON.stringify({
       type: Commands.START_GAME,
       data: JSON.stringify({
-        ships: gameDetails.data.find((player) => player.indexPlayer === playerId)?.ships,
-        currentPlayerIndex: playerId,
+        ships: game.data.filter((player) => player.indexPlayer === game.hostId)[0]?.ships,
+        currentPlayerIndex: game.hostId,
       }),
       id: 0,
     });
-
-  switch (actionType) {
-    case Commands.CREATE_GAME:
-      responseHost = createResponse(gameDetails.hostId);
-      responsePlayer = createResponse(gameDetails.clientId);
-      break;
-
-    case Commands.START_GAME:
-      responseHost = startResponse(gameDetails.hostId);
-      responsePlayer = startResponse(gameDetails.clientId);
-      break;
-
-    case Commands.TURN_INIT:
-      gameDetails.turn =
-        gameDetails.data[Math.floor(Math.random() * gameDetails.data.length)].indexPlayer;
-    case Commands.TURN:
-      if (actionType === Commands.TURN) {
-        gameDetails.turn = gameDetails.data.find(
-          (player) => player.indexPlayer !== gameDetails.turn
-        )?.indexPlayer;
-      }
-      const turnResponse = JSON.stringify({
-        type: Commands.TURN,
-        data: JSON.stringify({ currentPlayer: gameDetails.turn }),
-        id: 0,
-      });
-      responseHost = turnResponse;
-      responsePlayer = turnResponse;
-      break;
-
-    default:
-      break;
+    clientResponse = JSON.stringify({
+      type: Commands.START_GAME,
+      data: JSON.stringify({
+        ships: game.data.filter((player) => player.indexPlayer === game.clientId)[0]?.ships,
+        currentPlayerIndex: game.clientId,
+      }),
+      id: 0,
+    });
   }
-
+  if (type === Commands.TURN_INIT) {
+    game.turn = game.data.map((player) => player.indexPlayer)[Math.floor(Math.random() * 2)];
+  }
+  if (type === Commands.TURN) {
+    game.turn = game.data.filter((player) => player.indexPlayer !== game.turn)[0]?.indexPlayer;
+  }
+  if (type === Commands.TURN || type === Commands.TURN_INIT) {
+    hostResponse = JSON.stringify({
+      type: Commands.TURN,
+      data: JSON.stringify({
+        currentPlayer: game.turn,
+      }),
+      id: 0,
+    });
+    clientResponse = hostResponse;
+  }
   return {
-    host: responseHost,
-    client: responsePlayer,
-    hostId: gameDetails.hostId,
-    clientId: gameDetails.clientId,
-    isOnline: gameDetails.isOnline,
+    host: hostResponse,
+    client: clientResponse,
+    hostId: game.hostId,
+    clientId: game.clientId,
+    isOnline: game.isOnline,
   };
 };
 

@@ -11,6 +11,7 @@ import createGameRequest from '../modules/requests/create-game-request';
 import getGameResponse from '../modules/responses/get-game-response';
 import hostResponse from '../modules/responses/host-response';
 import addShipsRequest from '../modules/requests/add-ships-request';
+import getAttack from '../modules/get-attack';
 
 function createWSServer(PORT: number) {
   const connections = new Map<number, WebSocket>();
@@ -69,11 +70,12 @@ function createWSServer(PORT: number) {
           handler: () => {
             const game = addShipsRequest(req);
             if (game) {
-              const responseStartGame = getGameResponse(Commands.START_GAME, game);
-              hostResponse(connections, game, responseStartGame.host, responseStartGame.client);
-              const responseTurn = getGameResponse(Commands.TURN_INIT, game);
-              hostResponse(connections, game, responseTurn.host, responseTurn.client);
-              if (!game.isOnline && game.turn === responseTurn.clientId) {
+              const startGame = getGameResponse(Commands.START_GAME, game);
+              console.log(`outbound message ->`, JSON.stringify(startGame, null, 2));
+              hostResponse(connections, game, startGame.host, startGame.client);
+              const turnInit = getGameResponse(Commands.TURN_INIT, game);
+              hostResponse(connections, game, turnInit.host, turnInit.client);
+              if (!game.isOnline && game.turn === turnInit.clientId) {
                 ws.emit(
                   'message',
                   JSON.stringify({
@@ -87,6 +89,12 @@ function createWSServer(PORT: number) {
                 );
               }
             }
+          },
+        },
+        {
+          type: Commands.ATTACK,
+          handler: () => {
+            getAttack(connections, wsClient, req, ws);
           },
         },
         {

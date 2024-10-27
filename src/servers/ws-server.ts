@@ -12,6 +12,7 @@ import getGameResponse from '../modules/responses/get-game-response';
 import hostResponse from '../modules/responses/host-response';
 import addShipsRequest from '../modules/requests/add-ships-request';
 import getAttack from '../modules/get-attack';
+import randomAttackRequest from '../modules/requests/random-attack-request';
 
 function createWSServer(PORT: number) {
   const connections = new Map<number, WebSocket>();
@@ -95,6 +96,15 @@ function createWSServer(PORT: number) {
           type: Commands.ATTACK,
           handler: () => {
             getAttack(connections, wsClient, req, ws);
+          },
+        },
+        {
+          type: Commands.RANDOM_ATTACK,
+          handler: () => {
+            const newObj = randomAttackRequest(req);
+            if (newObj) {
+              getAttack(connections, wsClient, newObj, ws);
+            }
           },
         },
         {

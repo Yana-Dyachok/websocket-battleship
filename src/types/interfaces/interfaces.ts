@@ -22,7 +22,7 @@ export interface IPlayerData extends IPlayerAuth {
   index: string;
 }
 
-export interface IPlayerErrData {
+interface IPlayerErrData {
   name: string;
   index: string;
   error?: boolean;
@@ -109,7 +109,7 @@ export interface IGamePrimary {
   isOnline: boolean;
 }
 
-export interface IGameData {
+interface IGameData {
   ships: IShip[];
   indexPlayer: number;
   grid: number[][];
@@ -122,10 +122,4 @@ export interface IGame {
   data: IGameData[] | [];
   turn?: number;
   isOnline: boolean;
-}
-
-export interface IMessage {
-  type: Commands;
-  data: string;
-  id: number;
 }

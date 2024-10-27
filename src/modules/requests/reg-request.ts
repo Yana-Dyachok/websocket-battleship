@@ -8,6 +8,7 @@ const regRequest = (ws: WebSocket, requestData: RegistrationType, conectionID: n
   if (requestData.type === Commands.REG_USER) {
     const response = playerAuth(requestData, conectionID);
     playerResponse(ws, JSON.stringify(response));
+    console.log(`outbound message ->`, JSON.stringify(response, null, 2));
   }
 };
 

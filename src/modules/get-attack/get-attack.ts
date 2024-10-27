@@ -1,11 +1,11 @@
 import { WebSocketServer, WebSocket } from 'ws';
-import updateWinnersRequest from './requests/update-winners-request';
-import { RegistrationType } from '../types/type';
-import attackRequest from './requests/attack-request';
-import hostResponse from './responses/host-response';
-import getGameResponse from './responses/get-game-response';
-import getResultRequest from './requests/get-result-request';
-import { Commands } from '../types/enum';
+import updateWinnersRequest from '../requests/update-winners-request';
+import { RegistrationType } from '../../types/type';
+import attackRequest from '../requests/attack-request';
+import hostResponse from '../responses/host-response';
+import getGameResponse from '../responses/get-game-response';
+import getResultRequest from '../requests/get-result-request';
+import { Commands } from '../../types/enum';
 
 const getAttack = (
   connections: Map<number, WebSocket>,

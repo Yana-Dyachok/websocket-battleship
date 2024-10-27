@@ -11,7 +11,7 @@ import createGameRequest from '../modules/requests/create-game-request';
 import getGameResponse from '../modules/responses/get-game-response';
 import hostResponse from '../modules/responses/host-response';
 import addShipsRequest from '../modules/requests/add-ships-request';
-import getAttack from '../modules/get-attack';
+import getAttack from '../modules/get-attack/get-attack';
 import randomAttackRequest from '../modules/requests/random-attack-request';
 
 function createWSServer(PORT: number) {
@@ -61,7 +61,6 @@ function createWSServer(PORT: number) {
               const game = createGameRequest(gameData);
               updateWinnersRequest(wsClient);
               const response = getGameResponse(Commands.CREATE_GAME, game);
-              console.log(`outbound message ->`, JSON.stringify(response, null, 2));
               hostResponse(connections, game, response.host, response.client);
             }
           },
@@ -72,7 +71,6 @@ function createWSServer(PORT: number) {
             const game = addShipsRequest(req);
             if (game) {
               const startGame = getGameResponse(Commands.START_GAME, game);
-              console.log(`outbound message ->`, JSON.stringify(startGame, null, 2));
               hostResponse(connections, game, startGame.host, startGame.client);
               const turnInit = getGameResponse(Commands.TURN_INIT, game);
               hostResponse(connections, game, turnInit.host, turnInit.client);
@@ -116,7 +114,6 @@ function createWSServer(PORT: number) {
               isOnline: false,
             });
             const response = getGameResponse(Commands.CREATE_GAME, game);
-            console.log(`outbound message ->`, JSON.stringify(response, null, 2));
             hostResponse(connections, game, response.host, response.client);
           },
         },

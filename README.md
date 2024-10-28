@@ -22,7 +22,6 @@ git checkout develop
 ```
 npm install
 ```
-### N.B.! Dear reviewers, please, when you start the application for the first time, first use the `npm run start:dev` command so that the index.js file is created, than u cat use `npm run start`
 ## Usage
 **Development**
 

@@ -13,6 +13,8 @@ import hostResponse from '../modules/responses/host-response';
 import addShipsRequest from '../modules/requests/add-ships-request';
 import getAttack from '../modules/get-attack/get-attack';
 import randomAttackRequest from '../modules/requests/random-attack-request';
+import getResultRequest from '../modules/requests/get-result-request';
+import cleanWSRequest from '../modules/requests/clean-ws-request';
 
 function createWSServer(PORT: number) {
   const connections = new Map<number, WebSocket>();
@@ -125,11 +127,31 @@ function createWSServer(PORT: number) {
         }
       });
     });
+
     ws.on('error', (error: Error) => {
       console.error(error);
     });
+
     ws.on('close', () => {
       console.log(Messages.CLIENT_DISCONNECT);
+      const game = cleanWSRequest(connectionID);
+      if (game) {
+        const response = getResultRequest({
+          type: Commands.ATTACK,
+          data: {
+            gameId: game.idGame,
+            x: 0,
+            y: 0,
+            indexPlayer: game.clientId === connectionID ? game.hostId : game.clientId,
+          },
+          id: 0,
+        });
+        if (response) {
+          hostResponse(connections, response.game, response.response, response.response);
+        }
+      }
+      updateRoomRequest(wsClient);
+      updateWinnersRequest(wsClient);
     });
   });
 

@@ -16,17 +16,32 @@ export const generateShipCoordinates = (ships: IShip[]) => {
 };
 
 export const generateShipField = (ships: IShip[]): number[][] => {
-  const grid: number[][] = Array(10)
-    .fill(0)
-    .map(() => Array(10).fill(0)) as number[][];
+  const field: number[][] = createField();
 
   ships.forEach((ship) => {
     for (let i = 0; i < ship.length; i++) {
-      grid[ship.direction ? ship.position.y + i : ship.position.y][
+      field[ship.direction ? ship.position.y + i : ship.position.y][
         ship.direction ? ship.position.x : ship.position.x + i
       ] = 1;
     }
   });
 
-  return grid;
+  return field;
 };
+
+export const createField = () =>
+  Array(10)
+    .fill(0)
+    .map(() => Array(10).fill(0)) as number[][];
+
+export const createShips = () =>
+  Array(10).fill({
+    position: {
+      x: 0,
+      y: 0,
+    },
+    direction: true,
+    length: 1,
+    type: 'small',
+    isKilled: false,
+  });

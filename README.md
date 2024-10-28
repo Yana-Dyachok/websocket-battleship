@@ -2,10 +2,26 @@
 > Static http server and base task packages. 
 > By default WebSocket client tries to connect to the 3000 port.
 
-## Installation
-1. Clone/download repo
-2. `npm install`
+### [Task](https://github.com/AlreadyBored/nodejs-assignments/blob/main/assignments/battleship/assignment.md)
 
+## How to install
+
+1.  Clone this repository
+```
+git clone https://github.com/Yana-Dyachok/websocket-battleship.git
+```
+2.  Move to the cloned repository
+```
+cd websocket-battleship
+```
+3.  Switch the branch to `develop`
+```
+git checkout develop
+```
+4.  Install dependencies
+```
+npm install
+```
 ## Usage
 **Development**
 
@@ -20,12 +36,13 @@
 * App served @ `http://localhost:8181` without nodemon
 
 ---
+## Scripts
+ Scripts                  |   instructions                         | Commands
+--------------------------|:---------------------------------------|:-----------------------------
+ESLint                    | check:                                 | npm run lint 
+Prettier                  | fix and formats files:                 | npm run format
+Nodemon                   | App served @ `http://localhost:8181` with nodemon  |  npm run start:dev
+TypeScript Compiler       | App served @ `http://localhost:8181` without nodemon   | npm run start
 
-**All commands**
-
-Command | Description
---- | ---
-`npm run start:dev` | App served @ `http://localhost:8181` with nodemon
-`npm run start` | App served @ `http://localhost:8181` without nodemon
 
 **Note**: replace `npm` with `yarn` in `package.json` if you use yarn.
